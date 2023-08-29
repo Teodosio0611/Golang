@@ -1,10 +1,11 @@
 package main
 
 import (
-	"fmt"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
 )
 
 type Stargazer struct {
@@ -28,10 +29,17 @@ type Stargazer struct {
 
 type Stargazers []Stargazer
 func main() {
-	url := "https://gitee.com/api/v5/repos/tfcolin/ftbt/stargazers?page=1&per_page=20"
+	if len(os.Args) != 3 {
+		fmt.Println("Usage: ./main.go <username> <repo>")
+		return
+	}
+	username := os.Args[1]
+	repo := os.Args[2]
+
+	url := "https://gitee.com/api/v5/repos/" + fmt.Sprintf("%s", username) + "/" + fmt.Sprintf("%s", repo) + "/stargazers?page=1&per_page=20"
 	method := "GET"
 
-	client := &http.Client {}
+	client := &http.Client{}
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		fmt.Println(err)
